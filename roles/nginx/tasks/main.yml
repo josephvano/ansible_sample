@@ -1,0 +1,29 @@
+---
+
+- name: Add nginx repo
+  yum: name=http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-{{ ansible_distribution_major_version}}-0.el{{ ansible_distribution_major_version }}.ngx.noarch.rpm
+
+- name: Install nginx
+  yum: name=nginx state=present
+
+- name: Allow nginx firewall
+  service: name=iptables state=stopped
+
+- name: Create sites-enabled and sites-available
+  file: path=/etc/nginx/{{ item }} state=directory
+  with_items:
+    - sites-enabled
+    - sites-available
+
+- name: Copy nginx.conf
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  notify:
+    - Restart nginx
+
+- name: Copy default.conf
+  template: src=default.conf.j2 dest=/etc/nginx/sites-available/default.conf
+
+- name: Move default.conf to sites-enabled
+  file: src=/etc/nginx/sites-available/default.conf dest=/etc/nginx/sites-enabled/default.conf state=link
+  notify:
+    - Restart nginx

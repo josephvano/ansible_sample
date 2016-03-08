@@ -1,0 +1,4 @@
+---
+
+server_name: "192.168.33.50"
+nginx_worker_processes: "4"

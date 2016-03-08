@@ -1,0 +1,8 @@
+---
+- name: Install nginx
+  hosts: web
+  become: true
+  roles:
+    - common
+    - nginx
+    - nodejs

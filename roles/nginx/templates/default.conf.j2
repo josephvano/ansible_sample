@@ -1,0 +1,14 @@
+server {
+  listen          0.0.0.0:80;
+  server_name     {{ server_name }};
+  access_log      /var/log/nginx/{{server_name}}.log;
+
+  location / {
+    proxy_set_header  X-Real-IP $remote_addr;
+    proxy_set_header  HOST $http_post;
+    proxy_set_header  X-Nginx-Proxy true;
+
+    proxy_pass        http://0.0.0.0:3000;
+    proxy_redirect    off;
+  }
+}

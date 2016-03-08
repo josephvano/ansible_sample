@@ -1,0 +1,16 @@
+---
+
+- name: Add nodesource repository
+  yum: name=https://rpm.nodesource.com/pub_4.x/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/nodesource-release-el{{ ansible_distribution_major_version }}-1.noarch.rpm state=present
+
+- name: Install node
+  yum: name=nodejs-4* update_cache=yes state=present
+
+- name: Install pm2
+  npm: name=pm2 global=yes state=present
+
+- name: pm2 startup
+  command: "pm2 startup centos"
+
+- name: pm2 start application
+  command: "pm2 start {{ expressjs_main_file }} --name '{{ expressjs_app_name }}' -f"
